@@ -1,17 +1,13 @@
 // import dependencies
 require("dotenv").config();
 const path = require("node:path");
-const { Pool } = require("pg");
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
-
-// Set up database connection
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+const { getUserByEmail, getUserById } = require("./db/queries");
+const routes = require("./routes/index");
 
 // Set up Express app
 const app = express();
@@ -28,11 +24,7 @@ passport.use(
     { usernameField: "email" },
     async (username, password, done) => {
       try {
-        const { rows } = await pool.query(
-          "SELECT * FROM users WHERE email = $1",
-          [username],
-        );
-        const user = rows[0];
+        const user = await getUserByEmail(username);
 
         if (!user) {
           return done(null, false, { message: "Incorrect email" });
@@ -56,11 +48,7 @@ passport.serializeUser((user, done) => {
 // Deserialize user by ID from the session
 passport.deserializeUser(async (id, done) => {
   try {
-    const { rows } = await pool.query("SELECT * FROM users WHERE id = $1", [
-      id,
-    ]);
-    const user = rows[0];
-
+    const user = await getUserById(id);
     done(null, user);
   } catch (err) {
     done(err);
@@ -73,45 +61,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// home route
-app.get("/", (req, res) => {
-  res.render("index", { user: req.user });
-});
-
-// signup route
-app.get("/sign-up", (req, res) => res.render("sign-up-form"));
-app.post("/sign-up", async (req, res, next) => {
-  try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    await pool.query(
-      "INSERT INTO users (name, email, password) VALUES ($1, $2, $3)",
-      [req.body.name, req.body.email, hashedPassword],
-    );
-    res.redirect("/");
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-
-// login route
-app.post(
-  "/log-in",
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/",
-  }),
-);
-
-// logout route
-app.get("/log-out", (req, res, next) => {
-  req.logout((err) => {
-    if (err) {
-      return next(err);
-    }
-    res.redirect("/");
-  });
-});
+// Routes
+app.use("/", routes);
 
 // listen for requests
 app.listen(3000, (error) => {
