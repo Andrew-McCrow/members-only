@@ -9,14 +9,14 @@
 <body class="bg-light d-flex align-items-center justify-content-center" style="min-height: 100vh;">
   <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
     <% if (locals.user) {%>
-      <h1 class="h4 mb-3 text-center">Welcome back, <strong><%= user.username %></strong>!</h1>
+      <h1 class="h4 mb-3 text-center">Welcome back, <strong><%= user.name %></strong>!</h1>
       <a href="/log-out" class="btn btn-outline-danger w-100">Log Out</a>
     <% } else { %>
       <h1 class="h4 mb-4 text-center">Log In</h1>
       <form action="/log-in" method="POST">
         <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
-          <input id="username" name="username" placeholder="Username" type="text" class="form-control" />
+          <label for="email" class="form-label">Email</label>
+          <input id="email" name="email" placeholder="Email" type="email" class="form-control" />
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
