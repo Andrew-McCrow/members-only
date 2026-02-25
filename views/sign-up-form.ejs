@@ -68,6 +68,16 @@
             <div class="invalid-feedback"><%= errors.confirmPassword.msg %></div>
           <% } %>
         </div>
+        <div class="mb-3 form-check">
+          <input
+            id="is_admin"
+            name="is_admin"
+            type="checkbox"
+            class="form-check-input"
+            <%= formData.is_admin === 'on' ? 'checked' : '' %>
+          />
+          <label for="is_admin" class="form-check-label">Admin account</label>
+        </div>
         <button type="submit" class="btn btn-success w-100">Sign Up</button>
       </form>
       <hr />

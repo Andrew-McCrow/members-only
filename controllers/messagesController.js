@@ -1,4 +1,4 @@
-const { createMessage } = require("../db/queries");
+const { createMessage, deleteMessage } = require("../db/queries");
 
 // Render the new message form
 function getNewMessage(req, res) {
@@ -29,4 +29,18 @@ async function postNewMessage(req, res, next) {
   }
 }
 
-module.exports = { getNewMessage, postNewMessage };
+// Handle message deletion (admins only)
+async function deleteMessageHandler(req, res, next) {
+  if (!req.user || !req.user.is_admin) {
+    return res.status(403).send("Forbidden");
+  }
+  try {
+    await deleteMessage(req.params.id);
+    res.redirect("/");
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+}
+
+module.exports = { getNewMessage, postNewMessage, deleteMessageHandler };

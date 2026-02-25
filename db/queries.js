@@ -12,10 +12,10 @@ async function getUserById(id) {
   return rows[0];
 }
 
-async function createUser(name, email, hashedPassword) {
+async function createUser(name, email, hashedPassword, isAdmin) {
   await pool.query(
-    "INSERT INTO users (name, email, password, member_status) VALUES ($1, $2, $3, $4)",
-    [name, email, hashedPassword, "in_the_cold"],
+    "INSERT INTO users (name, email, password, member_status, is_admin) VALUES ($1, $2, $3, $4, $5)",
+    [name, email, hashedPassword, "in_the_cold", isAdmin],
   );
 }
 
@@ -33,4 +33,19 @@ async function createMessage(userId, title, message) {
   );
 }
 
-module.exports = { getUserByEmail, getUserById, createUser, updateMemberStatus, createMessage };
+async function getAllMessages() {
+  const { rows } = await pool.query(
+    `SELECT messages.id, messages.title, messages.message, messages.timestamp,
+            users.name AS author_name
+     FROM messages
+     JOIN users ON messages.user_id = users.id
+     ORDER BY messages.timestamp DESC`,
+  );
+  return rows;
+}
+
+async function deleteMessage(id) {
+  await pool.query("DELETE FROM messages WHERE id = $1", [id]);
+}
+
+module.exports = { getUserByEmail, getUserById, createUser, updateMemberStatus, createMessage, getAllMessages, deleteMessage };

@@ -1,11 +1,18 @@
 // dependency imports
 const bcrypt = require("bcryptjs");
 const { createUser, updateMemberStatus } = require("../db/queries");
+const { getAllMessages } = require("../db/queries");
 const { validationResult } = require("express-validator");
 
 // Render the home page
-function getIndex(req, res) {
-  res.render("index", { user: req.user });
+async function getIndex(req, res, next) {
+  try {
+    const messages = await getAllMessages();
+    res.render("index", { user: req.user, messages });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
 }
 // Render the sign-up form
 function getSignUp(req, res) {
@@ -23,7 +30,8 @@ async function postSignUp(req, res, next) {
   }
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    await createUser(req.body.name, req.body.email, hashedPassword);
+    const isAdmin = req.body.is_admin === "on";
+    await createUser(req.body.name, req.body.email, hashedPassword, isAdmin);
     res.redirect("/");
   } catch (error) {
     console.error(error);
