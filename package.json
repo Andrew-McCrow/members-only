@@ -1,0 +1,30 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Andrew-McCrow/auth#readme",
+  "bugs": {
+    "url": "https://github.com/Andrew-McCrow/auth/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Andrew-McCrow/auth.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.3.1",
+    "ejs": "^4.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.18.0"
+  }
+}
