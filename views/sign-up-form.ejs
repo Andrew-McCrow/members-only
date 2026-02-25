@@ -23,8 +23,12 @@
             name="name"
             placeholder="Full name"
             type="text"
-            class="form-control"
+            value="<%= formData.name || '' %>"
+            class="form-control <%= errors.name ? 'is-invalid' : '' %>"
           />
+          <% if (errors.name) { %>
+            <div class="invalid-feedback"><%= errors.name.msg %></div>
+          <% } %>
         </div>
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
@@ -33,8 +37,12 @@
             name="email"
             placeholder="Email"
             type="email"
-            class="form-control"
+            value="<%= formData.email || '' %>"
+            class="form-control <%= errors.email ? 'is-invalid' : '' %>"
           />
+          <% if (errors.email) { %>
+            <div class="invalid-feedback"><%= errors.email.msg %></div>
+          <% } %>
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
@@ -42,8 +50,23 @@
             id="password"
             name="password"
             type="password"
-            class="form-control"
+            class="form-control <%= errors.password ? 'is-invalid' : '' %>"
           />
+          <% if (errors.password) { %>
+            <div class="invalid-feedback"><%= errors.password.msg %></div>
+          <% } %>
+        </div>
+        <div class="mb-3">
+          <label for="confirmPassword" class="form-label">Confirm Password</label>
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            class="form-control <%= errors.confirmPassword ? 'is-invalid' : '' %>"
+          />
+          <% if (errors.confirmPassword) { %>
+            <div class="invalid-feedback"><%= errors.confirmPassword.msg %></div>
+          <% } %>
         </div>
         <button type="submit" class="btn btn-success w-100">Sign Up</button>
       </form>

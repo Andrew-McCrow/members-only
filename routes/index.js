@@ -6,6 +6,7 @@ const {
   postSignUp,
   logOut,
 } = require("../controllers/authController");
+const { signUpValidators } = require("../middleware/validators");
 
 const router = Router();
 
@@ -14,7 +15,7 @@ router.get("/", getIndex);
 
 // signup
 router.get("/sign-up", getSignUp);
-router.post("/sign-up", postSignUp);
+router.post("/sign-up", signUpValidators, postSignUp);
 
 // login
 router.post(
