@@ -1,6 +1,6 @@
 // dependency imports
 const bcrypt = require("bcryptjs");
-const { createUser } = require("../db/queries");
+const { createUser, updateMemberStatus } = require("../db/queries");
 const { validationResult } = require("express-validator");
 
 // Render the home page
@@ -40,4 +40,24 @@ function logOut(req, res, next) {
   });
 }
 
-module.exports = { getIndex, getSignUp, postSignUp, logOut };
+// Render the join-club page
+function getJoinClub(req, res) {
+  res.render("join-club", { error: null });
+}
+
+// Handle join-club form submission
+async function postJoinClub(req, res, next) {
+  const { passcode } = req.body;
+  if (passcode !== process.env.PASSCODE) {
+    return res.status(400).render("join-club", { error: "Incorrect passcode. Try again!" });
+  }
+  try {
+    await updateMemberStatus(req.user.id, "in_da_club");
+    res.redirect("/");
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+}
+
+module.exports = { getIndex, getSignUp, postSignUp, logOut, getJoinClub, postJoinClub };

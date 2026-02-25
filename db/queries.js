@@ -14,9 +14,23 @@ async function getUserById(id) {
 
 async function createUser(name, email, hashedPassword) {
   await pool.query(
-    "INSERT INTO users (name, email, password) VALUES ($1, $2, $3)",
-    [name, email, hashedPassword],
+    "INSERT INTO users (name, email, password, member_status) VALUES ($1, $2, $3, $4)",
+    [name, email, hashedPassword, "in_the_cold"],
   );
 }
 
-module.exports = { getUserByEmail, getUserById, createUser };
+async function updateMemberStatus(id, status) {
+  await pool.query("UPDATE users SET member_status = $1 WHERE id = $2", [
+    status,
+    id,
+  ]);
+}
+
+async function createMessage(userId, title, message) {
+  await pool.query(
+    "INSERT INTO messages (user_id, title, message, timestamp) VALUES ($1, $2, $3, NOW())",
+    [userId, title, message],
+  );
+}
+
+module.exports = { getUserByEmail, getUserById, createUser, updateMemberStatus, createMessage };

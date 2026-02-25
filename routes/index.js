@@ -5,7 +5,10 @@ const {
   getSignUp,
   postSignUp,
   logOut,
+  getJoinClub,
+  postJoinClub,
 } = require("../controllers/authController");
+const { getNewMessage, postNewMessage } = require("../controllers/messagesController");
 const { signUpValidators } = require("../middleware/validators");
 
 const router = Router();
@@ -28,5 +31,13 @@ router.post(
 
 // logout
 router.get("/log-out", logOut);
+
+// join club
+router.get("/join-club", getJoinClub);
+router.post("/join-club", postJoinClub);
+
+// messages
+router.get("/new-message", getNewMessage);
+router.post("/new-message", postNewMessage);
 
 module.exports = router;

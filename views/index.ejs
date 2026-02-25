@@ -10,6 +10,13 @@
   <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
     <% if (locals.user) {%>
       <h1 class="h4 mb-3 text-center">Welcome back, <strong><%= user.name %></strong>!</h1>
+      <% if (user.member_status === 'in_da_club') { %>
+        <div class="alert alert-success text-center mb-3">You're In Da Club! 🎉</div>
+        <a href="/new-message" class="btn btn-success w-100 mb-2">Create a New Message</a>
+      <% } else { %>
+        <div class="alert alert-warning text-center mb-3">You're currently in the cold...</div>
+        <a href="/join-club" class="btn btn-primary w-100 mb-2">Join the Club</a>
+      <% } %>
       <a href="/log-out" class="btn btn-outline-danger w-100">Log Out</a>
     <% } else { %>
       <h1 class="h4 mb-4 text-center">Log In</h1>
